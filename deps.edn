@@ -1,0 +1,5 @@
+{:deps {clj-http/clj-http {:mvn/version "3.13.0"}
+        cheshire/cheshire {:mvn/version "5.13.0"}
+        hato/hato {:mvn/version "1.0.0"}
+        nostr/nostr {:local/root "/home/steffen/coding/nostr-clj"}}}
+
