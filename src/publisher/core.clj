@@ -5,9 +5,9 @@
             [hato.websocket :as ws]
             [cheshire.core :as json]))
 
-(defn create-websocket []
+(defn create-websocket [relay]
   ;; Create the WebSocket connection and return it
-  (let [ws @(ws/websocket "ws://localhost:7778"
+  (let [ws @(ws/websocket relay
                           {:on-message (fn [ws msg last?]
                                          (when last?
                                            (println msg)))
@@ -27,13 +27,15 @@
 (defn process-json-line [raw-event]
   (save-to-jsonl raw-event "events.jsonl"))
 
-(defn process-json-lines-file [file-path]
-  (let [ws (create-websocket)]
-    (with-open [reader (io/reader "resources/oersi_data.jsonl")]
+(defn process-json-lines-file [file-path relay]
+  (let [ws (create-websocket relay)]
+    (with-open [reader (io/reader file-path)]
       (doseq [line (line-seq reader)]
         (let [json-data (json/parse-string line true)
-              raw-event (edufeed/transform-amb-to-30142-event (:_source json-data))
-              ]
+              raw-event (edufeed/transform-amb-to-30142-event (:_source json-data))]
           (process-json-line raw-event)
           (send-to-relay ws raw-event))))))
 
+(defn run [{:keys [path relay]}]
+  (println "Args:" path relay)
+  (process-json-lines-file path relay ))

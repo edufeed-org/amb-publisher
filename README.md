@@ -2,9 +2,9 @@
 
 Publishes AMB data from a json-file to some relay.
 
-`clj -X publisher.core/process-json-lines-file :path resources/oersi_data.jsonl`
-
+`clj -X publisher.core/run :path "resources/oersi_data.jsonl" :relay "ws://localhost:10547"`
 
 ## TODO
 
-- [ ] make relay configurable
+- [X] make relay configurable
+- [ ] enable multiple relays
